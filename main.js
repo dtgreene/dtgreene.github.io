@@ -33,7 +33,7 @@ function update() {
 
   // draw
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#ddd';
   for(let i = 0; i < nodes.length; i++) {
     nodes[i].draw();
   }
