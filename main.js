@@ -1,6 +1,7 @@
 const TWO_PI = Math.PI * 2;
 const NODE_SPEED = 2;
 const NODE_RADIUS = 2;
+const NODE_DISTANCE = 128;
 
 let canvas, ctx;
 let nodes = [];
@@ -20,7 +21,7 @@ function setup() {
   canvas.height = window.innerHeight;
 
   nodes = [];
-  for(let i = 0; i < 100; i++) {
+  for(let i = 0; i < 300; i++) {
     nodes.push(new Node());
   }
 }
@@ -31,11 +32,36 @@ function update() {
     nodes[i].update();
   }
 
+  // sort nodes by y position
+  nodes.sort((a, b) => a.y - b.y);
+
   // draw
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#ddd';
+  ctx.strokeStyle = '#ddd';
   for(let i = 0; i < nodes.length; i++) {
     nodes[i].draw();
+
+    for(let j = i + 1; j < nodes.length; j++) {
+      const yDiff = Math.abs(nodes[i].y - nodes[j].y);
+      if(yDiff < NODE_DISTANCE) {
+        const a = nodes[j].x - nodes[i].x;
+        const b = nodes[j].y - nodes[i].y;
+        const distance = Math.sqrt(a * a + b * b);
+
+        if(distance < NODE_DISTANCE) {
+          const alpha = remap(distance, 0, NODE_DISTANCE, 1, 0);
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      } else {
+        break;
+      }
+    }
   }
 
   requestAnimationFrame(update);
@@ -69,3 +95,7 @@ class Node {
     ctx.fill();
   }
 }
+
+function remap(n, start1, stop1, start2, stop2) {
+  return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
+};
