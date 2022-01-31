@@ -1,6 +1,8 @@
 const TWO_PI = Math.PI * 2;
-const NODE_SPEED = 2;
-const NODE_RADIUS = 2;
+const NODE_MIN_SPEED = 0.5;
+const NODE_MAX_SPEED = 1.5;
+const NODE_MIN_RADIUS = 2;
+const NODE_MAX_RADIUS = 3;
 const NODE_DISTANCE = 128;
 
 let canvas, ctx;
@@ -73,8 +75,11 @@ class Node {
     this.y = Math.random() * canvas.height;
     
     const direction = Math.random() * TWO_PI;
-    this.xAcc = Math.cos(direction) * NODE_SPEED;
-    this.yAcc = Math.sin(direction) * NODE_SPEED;
+    const speed = Math.random() * (NODE_MAX_SPEED - NODE_MIN_SPEED) + NODE_MIN_SPEED;
+    this.xAcc = Math.cos(direction) * speed;
+    this.yAcc = Math.sin(direction) * speed;
+
+    this.radius = Math.random() * (NODE_MAX_RADIUS - NODE_MIN_RADIUS) + NODE_MIN_RADIUS;
   }
   update = () => {
     const nextX = this.x + this.xAcc;
@@ -91,7 +96,7 @@ class Node {
   }
   draw = () => {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, NODE_RADIUS, 0, TWO_PI);
+    ctx.arc(this.x, this.y, this.radius, 0, TWO_PI);
     ctx.fill();
   }
 }
