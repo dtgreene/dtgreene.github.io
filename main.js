@@ -39,9 +39,10 @@ function update() {
 
   // draw
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#ddd';
-  ctx.strokeStyle = '#ddd';
   for(let i = 0; i < nodes.length; i++) {
+    const color = `hsl(${remap(nodes[i].y, 0, canvas.height, 0, 100)}, 100%, 50%)`;
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
     nodes[i].draw();
 
     for(let j = i + 1; j < nodes.length; j++) {
